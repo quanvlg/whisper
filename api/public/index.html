@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Whisper Transcribe</title>
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 600px;
+      margin: 50px auto;
+    }
+    .box {
+      border: 2px dashed #ccc;
+      padding: 30px;
+      text-align: center;
+      border-radius: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🎤 Upload audio → chuyển text</h2>
+
+<div class="box">
+  <input type="file" id="fileInput" />
+  <br>
+  <button onclick="upload()">Upload & Transcribe</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+async function upload() {
+  const fileInput = document.getElementById("fileInput");
+  const resultDiv = document.getElementById("result");
+
+  if (!fileInput.files.length) {
+    alert("Chọn file trước");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+
+  resultDiv.innerHTML = "⏳ Đang xử lý...";
+
+  try {
+    const res = await fetch("/transcribe", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      resultDiv.innerHTML = "✅ Kết quả:\n\n" + data.text;
+    } else {
+      resultDiv.innerHTML = "❌ Lỗi: " + data.error;
+    }
+
+  } catch (err) {
+    resultDiv.innerHTML = "❌ Lỗi server";
+  }
+}
+</script>
+
+</body>
+</html>

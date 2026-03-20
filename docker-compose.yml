@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  whisper:
+    image: onerahmet/openai-whisper-asr-webservice:latest
+    container_name: whisper
+    environment:
+      - ASR_ENGINE=openai_whisper
+      - ASR_MODEL=medium
+      - ASR_OPTIONS={"language":"vi","beam_size":5}
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./data:/data
+      - ./models:/root/.cache
+    restart: unless-stopped
+
+  api:
+    image: node:18-alpine
+    container_name: whisper-api
+    working_dir: /app
+    volumes:
+      - ./api:/app
+      - ./data:/data
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && node index.js"
+    depends_on:
+      - whisper
+    restart: unless-stopped
