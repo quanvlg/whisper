@@ -5,7 +5,7 @@ services:
     container_name: whisper
     environment:
       - ASR_ENGINE=openai_whisper
-      - ASR_MODEL=medium
+      - ASR_MODEL=large-v3
       - ASR_OPTIONS={"language":"vi","beam_size":5}
     ports:
       - "9000:9000"
