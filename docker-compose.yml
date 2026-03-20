@@ -4,9 +4,9 @@ services:
     image: onerahmet/openai-whisper-asr-webservice:latest
     container_name: whisper
     environment:
-      - ASR_ENGINE=openai_whisper
+      - ASR_ENGINE=faster_whisper
       - ASR_MODEL=large-v3
-      - ASR_OPTIONS={"language":"vi","beam_size":5}
+      - ASR_OPTIONS={"language":"vi","beam_size":5,"compute_type":"int8"}
     ports:
       - "9000:9000"
     volumes:
